@@ -1,4 +1,4 @@
-import json,requests, os, sys, random, time, errno, itertools
+import json,requests, os, sys, random, time, errno, itertools, math
 from PIL import Image, ImageDraw
 
 def iter_incrementing_file_names(path):
@@ -46,10 +46,18 @@ response = requests.post(url, auth=requests.auth.HTTPBasicAuth(api_key, ''), fil
 textResp = response.text
 
 response = json.loads(response.text)
+coin_locs = []
+
+
 im = Image.open("img.jpg")
 draw = ImageDraw.Draw(im, mode="RGBA")
 prediction = response["result"][0]["prediction"]
 for i in prediction:
+    pix_x = (xmin+xmax)/2
+    pix_y = (ymin+ymax)/2
+    angle = math.atan((9 + (9/480)*abs(pix_y-480))/(1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5))*180/math.pi
+    distance = math.sqrt((9 + (9/480)*abs(pix_y-480))**2 + (1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5)**2)
+    coin_locs.append([distance,angle])
     draw.rectangle((i["xmin"],i["ymin"], i["xmax"],i["ymax"]), fill=(random.randint(1, 255),random.randint(1, 255),random.randint(1, 255),127))
 
 
@@ -59,5 +67,13 @@ im.save(Id2)
 
 with open(Id2 + ".txt", "w") as text_file:
     text_file.write(str(textResp))
+
+print(coin_locs)
+
+	
+#angle = atan((9 + (9/480)*abs(pix_y-480))/(1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5))
+#distance =  sqrt((9 + (9/480)*abs(pix_y-480))^2 + (1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5)^2)
+
+
 
 
