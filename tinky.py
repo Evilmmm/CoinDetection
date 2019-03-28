@@ -36,7 +36,7 @@ def safe_open(path, mode):
         else:
             return(filename)
 
-def check_cam:
+def check_cam():
 	Id = safe_open("img.jpg", "w")
 	name = "location=" + Id
 	os.system(str("gst-launch-1.0 v4l2src num-buffers=10 ! video/x-raw,format=NV12,width=640,height=480 ! jpegenc ! multifilesink " + name)) 
@@ -80,13 +80,13 @@ def check_cam:
 		return mr
 		
 	
-def module:
+def module():
 	while x != 'check':
 		x = ser.readline()
 	
 	ser.write(check_cam())
 	
-	while x != 'confirm'
+	while x != 'confirm':
 		x = ser.readline()
 	
 	#check aligned properly
@@ -95,7 +95,7 @@ def module:
 	else:
 		ser.write('420')
 
-		
+x = ser.readline()		
 while x != 'on':
 	x = ser.readline()
 ser.write('111')
