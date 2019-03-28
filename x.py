@@ -1,4 +1,4 @@
-import json,requests, os, sys, random, time, errno, itertools, math
+import json,requests, os, sys, random, time, errno, itertools
 from PIL import Image, ImageDraw
 
 def iter_incrementing_file_names(path):
@@ -29,7 +29,7 @@ def safe_open(path, mode):
 
 Id = safe_open("img.jpg", "w")
 name = "location=" + Id
-#os.system(str("gst-launch-1.0 v4l2src num-buffers=10 ! video/x-raw,format=NV12,width=640,height=480 ! jpegenc ! multifilesink " + name)) 
+os.system(str("gst-launch-1.0 v4l2src num-buffers=10 ! video/x-raw,format=NV12,width=640,height=480 ! jpegenc ! multifilesink " + name)) 
 time.sleep(0.15)
 
 
@@ -46,10 +46,7 @@ response = requests.post(url, auth=requests.auth.HTTPBasicAuth(api_key, ''), fil
 textResp = response.text
 
 response = json.loads(response.text)
-coin_locs = []
-
-
-im = Image.open("img.jpg")
+im = Image.open(Id)
 draw = ImageDraw.Draw(im, mode="RGBA")
 prediction = response["result"][0]["prediction"]
 for i in prediction:
@@ -60,20 +57,11 @@ for i in prediction:
     coin_locs.append([distance,angle])
     draw.rectangle((i["xmin"],i["ymin"], i["xmax"],i["ymax"]), fill=(random.randint(1, 255),random.randint(1, 255),random.randint(1, 255),127))
 
-
 #Save processed file
 Id2 = safe_open(str("Processed_" + Id), "w")
 im.save(Id2) 
 
 with open(Id2 + ".txt", "w") as text_file:
     text_file.write(str(textResp))
-
-print(coin_locs)
-
-	
-#angle = atan((9 + (9/480)*abs(pix_y-480))/(1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5))
-#distance =  sqrt((9 + (9/480)*abs(pix_y-480))^2 + (1.5 - (0.25*(abs(pix_y-480)/480)) + (10.5/640)*pix_x - 0.5)^2)
-
-
 
 
