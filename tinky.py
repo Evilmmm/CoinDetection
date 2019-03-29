@@ -81,24 +81,32 @@ def check_cam():
 		
 	
 def module():
-	while x != 'check':
+	print("Waiting for `check`")
+	x = ser.readline()	
+	while "check" not in x:
 		x = ser.readline()
-	
+	print("Recieved `check`, analyzing cam now")
 	ser.write(check_cam())
 	
-	while x != 'confirm'
+	print("Waiting for `confirm`")
+	while "confirm" not in x:
 		x = ser.readline()
 	
+	print("Recieved `confirm`")
 	#check aligned properly
-	if check_cam() < 9:
+	if abs(check_cam()) < 7:
+		print("Confirmed gold!")
 		ser.write('222')
 	else:
+		print("Not quite, try again")
 		ser.write('420')
 
-		
-while x != 'on':
+print("Waiting for `on`")
+x = ser.readline()	
+while "on" not in x:
 	x = ser.readline()
 ser.write('111')
+print("Sent `111` to confirm recieved `on`")
 
 while 1:
 	module()
