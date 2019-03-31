@@ -149,7 +149,7 @@ def module():
 	print("Confirmed: " + str(temp))
 
 	if temp != 666:
-		if abs(temp) < 7:
+		if abs(temp) < 11:
 			print("Confirmed gold!")
 			ser.flushInput()
 			ser.flushOutput()
