@@ -114,20 +114,29 @@ def check_cam():
 def module():
 	print("Waiting for `check`")
 
-
-
 	x = ser.readline()
-	
 	while (x.find("check") == -1):
 		print('\r' + x)
 		x = ser.readline()
 	print("Recieved `check`, analyzing cam now")
 
-	ser.flushInput()
-	ser.flushOutput()
-	ser.write(str(check_cam()) + '\r\n')
-	ser.flushInput()
-	ser.flushOutput()
+	temp1 = check_cam()
+	print("Checked: " + str(temp1))
+
+	if temp1 == 666:
+		ser.flushInput()
+		ser.flushOutput()
+		ser.write('666' + '\r\n')
+		ser.flushInput()
+		ser.flushOutput()
+		return 0
+	else:
+		ser.flushInput()
+		ser.flushOutput()
+		ser.write(str(temp1) + '\r\n')
+		ser.flushInput()
+		ser.flushOutput()
+
 	
 	print("Waiting for `confirm`")
 	while (x.find("confirm") == -1):
@@ -135,21 +144,32 @@ def module():
 		x = ser.readline()
 	
 	print("Recieved `confirm`")
-	#check aligned properly
-	if abs(check_cam()) < 7:
-		print("Confirmed gold!")
-		ser.flushInput()
-		ser.flushOutput()
-		ser.write('222' + '\r\n')
-		ser.flushInput()
-		ser.flushOutput()
+
+	temp = check_cam()
+	print("Confirmed: " + str(temp))
+
+	if temp != 666:
+		if abs(temp) < 7:
+			print("Confirmed gold!")
+			ser.flushInput()
+			ser.flushOutput()
+			ser.write('222' + '\r\n')
+			ser.flushInput()
+			ser.flushOutput()
+		else:
+			print("Not quite, try again")
+			ser.flushInput()
+			ser.flushOutput()
+			ser.write('420' + '\r\n')
+			ser.flushInput()
+			ser.flushOutput()
 	else:
-		print("Not quite, try again")
 		ser.flushInput()
 		ser.flushOutput()
-		ser.write('420' + '\r\n')
+		ser.write('666' + '\r\n')
 		ser.flushInput()
 		ser.flushOutput()
+		return 0
 
 
 print("Waiting for `on`")
@@ -166,6 +186,6 @@ ser.flushOutput()
 
 print("Sent `111` to confirm recieved `on`")
 
-while 1:
+while True:
 	module()
 
